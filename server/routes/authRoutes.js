@@ -1,0 +1,18 @@
+const express = require('express')
+const rateLimit = require('express-rate-limit')
+const { RegisterValidations, LoginValidations } = require('../validators/authValidators')
+const { RegisterUser, Login } = require('../controllers/authController')
+const router = express.Router()
+
+const authLimiter = rateLimit({
+    max: 5,
+    windowMs: 10 * 60 * 1000,
+    message: 'Too many request, try again later'
+})
+
+router.use(authLimiter)
+
+router.post('/register',RegisterValidations, RegisterUser)
+router.post('/login', LoginValidations, Login)
+
+module.exports = router
