@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 const { JWT_SECRET } = require('../config/env')
 
 const authMiddleware = async (req, res, next) => {
-    const token = req.cookie.Verba || req.headers.authorization?.split(' ')[1];
+    const token = req.cookies.Verba || req.headers.authorization?.split(' ')[1];
 
     if (!token) return res.status(401).json({ message: 'Unauthorized' });
 

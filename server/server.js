@@ -9,7 +9,7 @@ const startServer = async () => {
         const server = http.createServer(app)
 
         server.listen(PORT, () => {
-            console.log(`Server is running is ${NODE_ENV} mode on http://lcoalhost:${PORT}`);
+            console.log(`Server is running in ${NODE_ENV} mode on http://localhost:${PORT}`);
         })
 
         server.on('error', (error) => {

@@ -16,10 +16,7 @@ const RegisterUser = async (req, res) => {
         const userExists = await dataExists({ username, email }, User)
 
         if (userExists.exists) {
-            const conflict = []
-            if (userExists.usernameExists) conflict.push('Username')
-            if (userExists.emailExists) conflict.push('email')
-            return res.status(409).json({ success: false, data: { conflict: conflict }, message: `${conflict.includes('email') ? 'User with this credentials already exits' : 'Username already Taken'}` })
+            return res.status(409).json({ success: false, data: {}, message: userExists.emailExists ? 'User with this credentials already exits' : 'This username already Taken' })
         }
 
         const hashPassword = await hashing(password)
@@ -74,7 +71,18 @@ const Login = async (req, res) => {
     }
 }
 
+const Logout = async (req, res) => {
+    try {
+        res.clearCookie('Verba')
+        res.json({ success: true, message: 'Logged out successfully' })
+    } catch (error) {
+        console.log("Issue in Logging Out User:- ", error.message);
+        return res.status(500).json({ success: false, message: 'Server Error' })
+    }
+}
+
 module.exports = {
     RegisterUser,
-    Login
+    Login,
+    Logout
 }
