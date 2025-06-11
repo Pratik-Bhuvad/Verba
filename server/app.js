@@ -27,6 +27,9 @@ app.use('/api/auth', authRoutes)
 const blogRoutes = require('./routes/blogRoutes')
 app.use('/api/blog', blogRoutes)
 
+const userRoutes = require('./routes/userRoutes')
+app.use('/api/users', userRoutes)
+
 app.get('/', (req, res) => {
     res.status(200).json({ success: true, data: {}, message: 'Server Working' })
 })
