@@ -19,7 +19,7 @@ app.use(morgan('dev'))
 app.use(helmet())
 app.use(cookieParser())
 
-app.use(appLimit)
+// app.use(appLimit)
 
 const authRoutes = require('./routes/authRoutes')
 app.use('/api/auth', authRoutes)

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const mongoosePaginate = require('mongoose-paginate-v2')
 
 const blogSchema = mongoose.Schema({
     title:{
@@ -16,6 +17,6 @@ const blogSchema = mongoose.Schema({
         required: true
     },
 }, {timestamps: true})
-
+blogSchema.plugin(mongoosePaginate)
 const Blog = mongoose.model('Blog', blogSchema)
 module.exports = Blog

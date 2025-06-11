@@ -1,6 +1,7 @@
 const dataExists = async (data, model) => {
     try {
-        if (model === 'User') {
+        
+        if (model.modelName === 'User') {
             const existingUser = await model.findOne({
                 $or: [
                     { username: data.username },
