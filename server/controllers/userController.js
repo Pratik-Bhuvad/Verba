@@ -1,7 +1,7 @@
 const Blog = require('../models/Blog');
 const User = require('../models/user');
-const { compare } = require('../utils/Password');
-const {validationResult} = require('express-validator')
+const { compare, hashing } = require('../utils/Password');
+const { validationResult } = require('express-validator')
 
 const getMyProfile = async (req, res) => {
     try {
@@ -43,14 +43,17 @@ const updateProfile = async (req, res) => {
         const legitmateUser = await compare(currentPassword, user.password)
         if (!legitmateUser) return res.status(401).json({ success: false, data: {}, message: 'Invalid Credentials' })
 
-        const samePassword = await compare(newPassword, user.password)
-        if (samePassword) return res.status(409).json({ success: false, message: 'new password can not be same as old password' })
+        if (newPassword) {
+            const samePassword = await compare(newPassword, user.password)
+            if (samePassword) return res.status(409).json({ success: false, message: 'new password can not be same as old password' })
+        }
 
         user.username = username
         user.email = email
-        user.password = newPassword
-
+        newPassword && (user.password = await hashing(newPassword))
         await user.save()
+
+        user.password = undefined
 
         return res.status(200).json({ success: true, data: user, message: 'Profile Updation Successful' })
     } catch (error) {
@@ -81,7 +84,7 @@ const getUser = async (req, res) => {
         const user = await User.findById(id).select('username, email')
         if (!user) return res.status(404).json({ success: false, message: 'User Not Found' })
 
-        const userBlogs = await Blog.find({author: id}).sort({ createdAt: -1 })
+        const userBlogs = await Blog.find({ author: id }).sort({ createdAt: -1 })
         if (!userBlogs) return res.status(200).json({ success: true, data: user, message: `User doesn't have any Blogs yet` })
 
         return res.status(200).json({ success: true, data: { user, userBlogs }, message: `Specific User retrivial data successful` })

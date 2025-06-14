@@ -24,6 +24,7 @@ const PorfileUpdation = [
             minUppercase: 1,
             minSymbols: 1
         }).withMessage('Not a strong Password')
+        .optional()
 ]
 
 module.exports = {PorfileUpdation}
