@@ -2,6 +2,7 @@ const Blog = require('../models/Blog')
 const { validationResult } = require('express-validator')
 const dataExists = require('../utils/DataExists')
 const mongoose = require('mongoose')
+const User = require('../models/user')
 
 const createBlog = async (req, res) => {
     const errors = validationResult(req)
@@ -116,9 +117,42 @@ const singleRetrieveBlog = async (req, res) => {
         const blogExists = await Blog.findById(id)
         if (!blogExists) return res.status(404).json({ success: false, message: 'Blog not found' })
 
-        return res.status(200).json({success: true, data: blogExists, message: 'Blog Revtrieve Successfully'})
+        return res.status(200).json({ success: true, data: blogExists, message: 'Blog Revtrieve Successfully' })
     } catch (error) {
         console.log("Retriving Blogs Issue ", error.message);
+        return res.status(500).json({ success: false, data: {}, message: 'Server Error' })
+    }
+}
+
+const getblogsBy = async (req, res) => {
+    try {
+        const { search } = req.query
+        if (!search || search === null || search === undefined || search === '') return res.status(409).json({ success: false, message: 'Reguest Error' })
+
+        const blogsArray = await Blog.find({
+            $or: [
+                { title: { $regex: search, $options: 'i' } },
+                { content: { $regex: search, $options: 'i' } }
+            ]
+        })
+        if (!blogsArray || blogsArray.length === 0) return res.status(404).json({ success: false, message: 'Blogs Not Found' })
+
+        const blogsWithUsers = await Promise.all(
+            blogsArray.map(async (blog) => {
+                const user = await User.findById(blog.author)
+                return {
+                    ...blog.toObject(),
+                    authorDetails: {
+                        username: user.username,
+                        email: user.email
+                    }
+                }
+            })
+        )
+
+        return res.status(200).json({ success: true, data: blogsWithUsers, message: `Blogs data successful` })
+    } catch (error) {
+        console.log("Retriving Blogs By Search Issue ", error.message);
         return res.status(500).json({ success: false, data: {}, message: 'Server Error' })
     }
 }
@@ -128,5 +162,6 @@ module.exports = {
     updateBlog,
     deleteBlog,
     retrieveBlogs,
-    singleRetrieveBlog
+    singleRetrieveBlog,
+    getblogsBy
 }

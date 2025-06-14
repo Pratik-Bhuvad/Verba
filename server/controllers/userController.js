@@ -81,7 +81,7 @@ const deleteAccount = async (req, res) => {
 const getUser = async (req, res) => {
     try {
         const id = req.params.id
-        const user = await User.findById(id).select('username, email')
+        const user = await User.findById(id).select('username email')
         if (!user) return res.status(404).json({ success: false, message: 'User Not Found' })
 
         const userBlogs = await Blog.find({ author: id }).sort({ createdAt: -1 })
@@ -94,10 +94,39 @@ const getUser = async (req, res) => {
     }
 }
 
+const getUserDetails = async (req, res) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        const error_messages = errors.array().map(err => err.msg)
+        console.log("Request Validation Errors ", error_messages);
+        return res.status(400).json({ success: false, data: error_messages, message: 'Invalid Request Arguments' })
+    }
+    try {
+        const { search } = req.query
+        if (!search || search === null || search === undefined || search === '') return res.status(409).json({ success: false, message: 'Reguest Error' })
+        const user = await User.find({
+            $or: [
+                { username: search },
+                { email: search }
+            ]
+        }).select('username email id')
+        if (!user || user.length === 0) return res.status(404).json({ success: false, message: 'User Not Found' })
+
+        const userBlogs = await Blog.find({ author: user.id }).sort({ createdAt: -1 })
+        if (!userBlogs || userBlogs.length === 0) return res.status(200).json({ success: true, data: user, message: `User doesn't have any Blogs yet` })
+
+        return res.status(200).json({ success: true, data: { user, userBlogs }, message: `Specific User retrivial data successful` })
+    } catch (error) {
+        console.log("Retriving User Data by Username || Email Issue ", error.message);
+        return res.status(500).json({ success: false, data: {}, message: 'Server Error' })
+    }
+}
+
 module.exports = {
     getMyProfile,
     getMyBlogs,
     updateProfile,
     deleteAccount,
-    getUser
+    getUser,
+    getUserDetails
 }
