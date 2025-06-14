@@ -19,7 +19,12 @@ app.use(cors())
 app.use(morgan('dev'))
 app.use(helmet())
 app.use(cookieParser())
-app.use(mongoSanitize())
+// app.use(mongoSanitize({
+//     replaceWith: '_',
+//     onSanitize: ({ req, key }) => {
+//         console.warn(`This request[${key}] is sanitized`, req);
+//     }
+// }))
 
 app.use(appLimit)
 

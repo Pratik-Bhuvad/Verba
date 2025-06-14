@@ -21,15 +21,15 @@ const createBlog = async (req, res) => {
     try {
         const { title, content } = req.body
         const blogExists = await dataExists({ title, id: req.user.id }, Blog)
-        if (blogExists) {
+        if (blogExists.exists) {
             logError({
                 message: `Blog with title already exists`,
                 code: ERROR_CODES.BLOG_EXISTS
             }, 'createBlog', { title, userId: req.user.id })
             return res.status(HTTP_STATUS.CONFLICT).json({
                 success: false,
-                data: blogExists.title,
-                message: `Blog with Title: ${blogExists.title} is already created by You`,
+                data: title,
+                message: `Blog with Title: ${title} is already created by You`,
                 errorCode: ERROR_CODES.BLOG_EXISTS
             })
         }
@@ -67,7 +67,8 @@ const updateBlog = async (req, res) => {
             message: 'Invalid Request Arguments',
             errorCode: ERROR_CODES.INVALID_REQUEST
         })
-    } try {
+    }
+    try {
         const { title, content } = req.body
         const id = req.params.id
 

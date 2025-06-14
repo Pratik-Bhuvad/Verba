@@ -104,6 +104,7 @@ const Login = async (req, res) => {
                 errorCode: ERROR_CODES.INVALID_CREDENTIALS
             })
 
+        }
             const token = generateToken(userExists)
             res.cookie('Verba', token, {
                 httpOnly: true,
@@ -115,7 +116,6 @@ const Login = async (req, res) => {
                 data: { username: userExists.username, email: userExists.email },
                 message: 'Login Successful'
             })
-        }
     } catch (error) {
         logError(error, 'Login', { email: req.body.email })
         return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({

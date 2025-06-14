@@ -4,6 +4,7 @@ const { compare, hashing } = require('../utils/Password');
 const { validationResult } = require('express-validator');
 const { HTTP_STATUS, ERROR_CODES } = require('../utils/errorConstants');
 const { logError, logInfo } = require('../utils/logger');
+const mongoose = require('mongoose')
 
 const getMyProfile = async (req, res) => {
     try {
