@@ -1,6 +1,6 @@
 const dataExists = async (data, model) => {
     try {
-        
+
         if (model.modelName === 'User') {
             const existingUser = await model.findOne({
                 $or: [
@@ -9,19 +9,30 @@ const dataExists = async (data, model) => {
                 ]
             })
             if (!existingUser) {
-                return { exists: false }
+                return {
+                    exists: false,
+                    usernameExists: false,
+                    emailExists: false
+                }
             }
 
             return {
                 exists: true,
                 usernameExists: existingUser.username === data.username,
-                emailExists: existingUser.email === data.email
+                emailExists: existingUser.email === data.email,
+                data:existingUser
+            }
+        }
+        else if(model.modelName === 'Blog'){
+            const existingBlog = await model.findOne({ title: data.title, author: data.id})
+            return {
+                exists: !!existingBlog,
+                data: existingBlog || null,
+                title: existingBlog ? existingBlog.title : null
             }
         }
         else {
-            const existingBlog = await model.findOne({ title: data.title })
-            if (existingBlog?.author.toString() === data.id.toString()) return existingBlog
-            return false
+            return { exists: false}
         }
     } catch (error) {
         console.log("Database query error:", error.message);

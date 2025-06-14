@@ -4,6 +4,7 @@ const morgan = require('morgan')
 const helmet = require('helmet')
 const cookieParser = require('cookie-parser')
 const rateLimit = require('express-rate-limit')
+const mongoSanitize = require('express-mongo-sanitize')
 
 const appLimit = rateLimit({
     windowMs: 15 * 60 * 1000,
@@ -18,6 +19,7 @@ app.use(cors())
 app.use(morgan('dev'))
 app.use(helmet())
 app.use(cookieParser())
+app.use(mongoSanitize())
 
 app.use(appLimit)
 
@@ -34,7 +36,7 @@ app.get('/', (req, res) => {
     res.status(200).json({ success: true, data: {}, message: 'Server Working' })
 })
 
-app.use((err, req, res) => {
+app.use((err, req, res, next) => {
     console.log(err.stack);
     return res.status(500).json({ success: false, message: 'Server Error' })
 })

@@ -6,8 +6,8 @@ const router = express.Router()
 
 
 
-router.post('/', blogValidation, authMiddleware, createBlog)
-router.put('/:id', blogValidation, authMiddleware, updateBlog)
+router.post('/', authMiddleware, blogValidation, createBlog)
+router.put('/:id', authMiddleware, blogValidation, updateBlog)
 router.delete('/:id', authMiddleware, deleteBlog)
 router.get('/', retrieveBlogs)
 router.get('/blogs', getblogsBy)

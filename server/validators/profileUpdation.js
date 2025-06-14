@@ -15,7 +15,6 @@ const PorfileUpdation = [
         .notEmpty().withMessage('Current Password is required'),
 
     check('newPassword')
-        .notEmpty().withMessage('New Password is required')
         .isLength({ min: 8 }).withMessage("Password should be at least 8 characters long")
         .isStrongPassword({
             minLength: 8,
