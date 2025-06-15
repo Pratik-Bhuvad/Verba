@@ -5,11 +5,7 @@ const { RegisterUser, Login, Logout } = require('../controllers/authController')
 const authMiddleware = require('../middleware/authMiddleware')
 const router = express.Router()
 
-const authLimiter = rateLimit({
-    max: 25,
-    windowMs: 10 * 60 * 1000,
-    message: 'Too many request, try again later'
-})
+const {authLimiter} = require('../middleware/rateLimiting')
 
 router.use(authLimiter)
 

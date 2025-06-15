@@ -20,6 +20,8 @@ const RegisterUser = async (req, res) => {
     }
     try {
         const { username, email, password } = req.body
+        console.log(username, email ,password);
+        
         const userExists = await dataExists({ username, email }, User)
         if (userExists.exists) {
             const errorCode = userExists.emailExists ? ERROR_CODES.EMAIL_TAKEN : ERROR_CODES.USERNAME_TAKEN
