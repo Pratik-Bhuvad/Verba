@@ -1,12 +1,98 @@
-# React + Vite
+# Verba Backend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A robust and secure backend service for managing blogs and user authentication.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- User Authentication & Authorization
+- Blog Post Management
+- Rate Limiting
+- Input Sanitization
+- Secure Password Management
+- JWT Token Based Authentication
+- Logging System
+- Data Validation
 
-## Expanding the ESLint configuration
+## Project Structure
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```
+server/
+├── app.js                 # Express app configuration
+├── server.js             # Server entry point
+├── config/               # Configuration files
+│   ├── db.js            # Database configuration
+│   └── env.js           # Environment variables
+├── controllers/          # Request handlers
+│   ├── authController.js
+│   ├── blogController.js
+│   └── userController.js
+├── middleware/          # Custom middleware
+│   ├── authMiddleware.js
+│   ├── rateLimiting.js
+│   ├── sanitize.js
+│   └── security.js
+├── models/             # Database models
+│   ├── Blog.js
+│   └── user.js
+├── routes/            # API routes
+│   ├── authRoutes.js
+│   ├── blogRoutes.js
+│   └── userRoutes.js
+├── utils/            # Utility functions
+│   ├── DataExists.js
+│   ├── errorConstants.js
+│   ├── logger.js
+│   ├── Password.js
+│   └── Token.js
+└── validators/       # Input validation
+    ├── authValidators.js
+    ├── blogValidators.js
+    └── profileUpdation.js
+```
+
+## Getting Started
+
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   cd server
+   npm install
+   ```
+3. Set up environment variables
+4. Start the server:
+   ```bash
+   npm start
+   ```
+
+## Security Features
+
+- Password hashing
+- JWT token authentication
+- Input sanitization
+- Rate limiting
+- Secure HTTP headers
+- Request validation
+
+## API Documentation
+
+The API endpoints are organized into three main categories:
+
+### Authentication
+- POST /api/auth/register
+- POST /api/auth/login
+- POST /api/auth/logout
+
+### User Management
+- GET /api/users/profile
+- PUT /api/users/profile
+- DELETE /api/users/account
+
+### Blog Operations
+- GET /api/blogs
+- POST /api/blogs
+- PUT /api/blogs/:id
+- DELETE /api/blogs/:id
+
+## Error Handling
+
+The application implements a centralized error handling system with standardized error responses and logging.
